@@ -3,6 +3,8 @@
 #include <vector>
 #include <cmath>
 #include <ctime> 
+#include <exception>
+
 
 
 // friendly method дружественные методы
@@ -168,3 +170,96 @@ int main()
 //__________________________________________________________________
 //__________________________________________________________________
 
+//#except, #exceptions, #throw, #catch, #исключения, #ошибки
+//В этолм классе куча разных типо исключений, использовал в работе 33.throw/catch в store
+//#include <iostream>
+//#include <exception>
+void enterI(int &i)
+{
+    std::cin >> i;
+    if (i == 1)
+    {
+        throw std::exception();
+    }
+    if (i > 3 && i < 6)
+    {
+        throw std::invalid_argument("invalid argument");//одно из тех разных типов исключений
+    }
+}
+
+int main() {
+    int i = 0;
+    
+    try
+    {
+        enterI(i);
+        std::cout << "i is: " << i;                     //сообщение выведется только если ввод будет правильным
+    }                                                   //если будет ошибка то как будто сработает break...
+    
+    catch (const std::exception& x) 
+    {
+        std::cout << "Work exception: " << x.what();    //... и выведется сообщение с ошибкой.
+    }
+}
+//__________________________________________________________________
+//__________________________________________________________________
+
+//#exception #Наследование исключений. #Переопределение #what(), #Gереопределение метода what(). это оч круто.
+//#include<iostream>
+//#include<exception>
+
+class MoreThen10 : public std::exception
+{
+public:                                       //чтобы метод what() было видно из &x в момент catch
+    const char* what() const noexcept override//чтобы перегрузить, переопределить what, надо в точности его описать
+    {                                         //noexcept - указывает на то что наш метод сам не генерирует исключения
+        return "More then 10.\n";
+    }
+};
+
+void enterI(int& i)
+{
+    std::cin >> i;
+    if (i == 1)
+    {
+        throw std::exception();
+    }
+    if (i > 3 && i < 6)
+    {
+        throw std::invalid_argument("invalid argument");//одно из тех разных типов исключений
+    }
+    if (i > 10)
+    {
+        throw MoreThen10();//наше новое исключение.
+    }
+}
+
+int main()
+{
+    int i = 0;
+    bool input = true;
+    while (input)
+    {
+        try
+        {
+            enterI(i);
+            std::cout << "i is: " << i;
+        }
+        catch (const MoreThen10 &x) // можно ловить именно наши исключения в отличии от std::exception ниже
+        {
+            std::cout << x.what();  //вызываем соответственно метод what из класса MoreThen10
+        }
+        catch (const std::exception& x)
+        {
+            std::cout << "Work exception: " << x.what() << std::endl;
+            std::cout << "program will close now" << std::endl;
+            input = false;
+        }
+
+    }
+}
+//__________________________________________________________________
+//__________________________________________________________________
+ 
+
+//#end
