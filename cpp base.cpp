@@ -223,14 +223,18 @@ void enterI(int& i)
     if (i == 1)
     {
         throw std::exception();
-    }
+    }else
     if (i > 3 && i < 6)
     {
         throw std::invalid_argument("invalid argument");//одно из тех разных типов исключений
-    }
+    }else
     if (i > 10)
     {
         throw MoreThen10();//наше новое исключение.
+    }else
+    if (i == 0) // бросок для catch(...)
+    {
+        throw i;
     }
 }
 
@@ -247,12 +251,17 @@ int main()
         }
         catch (const MoreThen10 &x) // можно ловить именно наши исключения в отличии от std::exception ниже
         {
-            std::cout << x.what();  //вызываем соответственно метод what из класса MoreThen10
+            std::cerr << x.what();  //вызываем соответственно метод what из класса MoreThen10
         }
-        catch (const std::exception& x)
+        catch (const std::exception& x) // ловит все исключения если перед ним нет какит то четко обозначенных.
         {
-            std::cout << "Work exception: " << x.what() << std::endl;
-            std::cout << "program will close now" << std::endl;
+            std::cerr << "Work exception: " << x.what() << std::endl;
+            std::cerr << "program will close now" << std::endl;
+            input = false;
+        }
+        catch (...) // ловит любое исключение, опять же если перед ним не осписано какое либо другое исключение. 
+        {
+            std::cerr << "Some think wrong" << std::endl;
             input = false;
         }
 
