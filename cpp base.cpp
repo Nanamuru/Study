@@ -269,6 +269,115 @@ int main()
 }
 //__________________________________________________________________
 //__________________________________________________________________
- 
+
+//#range based loops #цикл без параметров #auto
+//#include <iostream>
+//#include <vector>
+
+class File
+{
+  public:
+  int b=5;
+};
+
+class Files
+{
+  public:
+
+  std::vector<File*> files;
+    Files(){
+    
+    files.push_back(new File);
+    files.push_back(new File);
+    files.push_back(new File);
+    }
+      
+    ~Files()
+    {
+      for(File* a:files){
+        std::cout << " deleted: " << a->b;
+        delete a;
+      }    
+      std::cout << std::endl;
+    }
+};
+int main() {
+
+  int a[]={5,6,7,8};
+
+  for(int i:a){ //range based loops, тот же цикл только без необходимости вводить ппараметры. если надо пройти с первого до последнего элемента массива.
+    std::cout << i+1;
+  }
+  std::cout << std::endl;
+  for(auto b: a) //может быть auto
+    std::cout << b-1;
+  std::cout << std::endl;
+
+  Files papki; 
+  for(File* file: papki.files) //С auto РАБОТАЕТ С КЛАССАМИ, оч удобно!!!! работает с классами и вообще всеми штуками того же типа
+    std::cout << " file is " << file->b;
+  std::cout << std::endl;
+}
+//auto ТАБОТАЕТ С ИТЕРАТОРАМИ... хотя нафиг они нужны если for(:) итак нормально работает
+//__________________________________________________________________
+//__________________________________________________________________
+
+//#initializer_list #лист инициализации #конструктор инициализации для массивов
+#include <iostream>
+#include <vector>
+class Part
+{  
+public:
+  int ac = 5;
+};
+
+class Tool
+{  
+
+  public:
+    Tool(std::initializer_list<Part> inParts)
+    {
+      parts = inParts;
+    }
+    std::vector<Part> parts;
+
+};
+
+class Geo
+{
+  private:
+    int lon, lat;
+  public:
+    Geo(float longitude, float latitude):lon(longitude), lat(latitude){}
+};
+
+class Road
+{
+  private:
+    std::vector<Geo> route;
+  public:
+    Road(std::initializer_list<Geo> inCoord)
+    {
+      route=inCoord;
+    }
+    
+};
+int main() {
+
+  Tool t({Part(),Part()}); //можно инициализировать так
+  for(auto d: t.parts)
+    std::cout << " part " << d.ac;
+  std::cout << std::endl;
+  Tool a = {{3},{Part()}}; //а можно так
+  for(auto d: a.parts)
+    std::cout << " part " << d.ac;
+  std::cout << std::endl;
+  //а можно ещё интереснее!!!
+  auto route1 = Road({{34.1,43.1},{24.1,13.5}}); //вообще вынос бошки
+}
+//__________________________________________________________________
+//__________________________________________________________________
+
+//#лямбда выражения
 
 //#end
